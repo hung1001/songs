@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Songs by Hung1001</title>
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1' name='viewport' />
+  <meta content='IE=edge' http-equiv='X-UA-Compatible' />
+  <link href='assets/img/favicon.ico' rel='icon' type='image/x-icon'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="songs">
+      <div class="row no-gutters flex-column-reverse flex-md-row">
+        <div class="col-md-7">
+          <div class="playlist">
+            <h3 class="playlist__title">Playlist (<span class='js-playlist-total'></span>)</h3>
+            <ul class="playlist__list js-playlist"></ul>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="player">
+            <div class="track-thumb js-track-thumb">
+              <img class="track-thumb__img js-track-thumb-img" src="assets/img/avatar-1.jpg">
+            </div>
+            <div class="track-details">
+              <span class="track-details__title js-title"></span>
+              <span class="track-details__artist js-artist"></span>
+            </div>
+            <div class="controls">
+              <div class="controls__icon controls__prev js-prev">
+                <i class="icons ion-ios-skipbackward"></i>
+              </div>
+              <div class="controls__icon controls__play js-play">
+                <i class="icons ion-ios-play"></i>
+              </div>
+              <div class="controls__icon controls__pause js-pause d-none">
+                <i class="icons ion-ios-pause"></i>
+              </div>
+              <div class="controls__icon controls__next js-next">
+                <i class="icons ion-ios-skipforward"></i>
+              </div>
+              <div class="controls__icon controls__volume js-volume-toggle">
+                <i class="icons ion-android-volume-up"></i>
+                <div class="controls__volume-body js-volume"></div>
+              </div>
+            </div>
+            <div class="duration">
+              <span class="duration__countup js-duration-countup"></span>
+              <span class="duration__coundown js-duration-coundown"></span>
+            </div>
+            <div class="tracker"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="songs-footer">Trong tất cả mọi tiếng ồn, âm nhạc có lẽ là thứ ít gây khó chịu nhất.</div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>
