@@ -5,8 +5,10 @@ $.get('assets/json/songs.json', function(data) {
     randImg = ['avatar-1.jpg', 'avatar-2.jpg', 'avatar-3.jpg', 'avatar-4.jpg', 'avatar-5.jpg', 'avatar-6.jpg', 'avatar-7.jpg'];
 
   $('.js-playlist-total').text(data.length);
-  data.forEach(function(item) {
-    $('.js-playlist').append('<li data-url="' + item.url + '">' + item.title + '</li>')
+
+  data.forEach(function(item, index) {
+    $('.js-playlist')
+      .append('<li class="col-lg-4" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>')
   });
 
   initAudio($('.js-playlist li:first-child'));
@@ -38,9 +40,31 @@ $.get('assets/json/songs.json', function(data) {
         $('.js-duration-countup').html(mUp + ':' + sUp);
       }
 
-      $('.js-duration-coundown').html(mDown + ":" + sDown);
+      $('.js-duration-coundown').html(mDown + ':' + sDown);
       tracker.slider('value', curtime);
     });
+
+    song.addEventListener('ended', function() {
+      var next = $('.js-playlist li.active').next();
+      if ($('.js-loop-one').hasClass('looped')) {
+        song.currentTime = 0;
+        song.play();
+        return;
+      }
+
+      if ($('.js-loop-all').hasClass('looped')) {
+        if (next.length == 0) {
+          next = $('.js-playlist li:first-child');
+        }
+        initAudio(next);
+        song.addEventListener('loadedmetadata', function() {
+          playAudio();
+        });
+      } else {
+        $('.js-track-thumb').removeClass('play');
+        return;
+      }
+    }, false);
 
     $('.js-playlist li').removeClass('active');
     elem.addClass('active');
@@ -62,16 +86,6 @@ $.get('assets/json/songs.json', function(data) {
   $('.js-play').on('click', function(e) {
     e.preventDefault();
     $('.js-track-thumb').addClass('play');
-    song.addEventListener('ended', function() {
-      var next = $('.js-playlist li.active').next();
-      if (next.length == 0) {
-        next = $('.js-playlist li:first-child');
-      }
-      initAudio(next);
-      song.addEventListener('loadedmetadata', function() {
-        playAudio();
-      });
-    }, false);
     tracker.slider('option', 'max', song.duration);
     song.play();
     $('.js-play').addClass('d-none');
@@ -114,9 +128,9 @@ $.get('assets/json/songs.json', function(data) {
     });
   });
 
-  $('.js-playlist li').on('click', function() {
+  $('.js-list-song').on('click', function() {
     stopAudio();
-    initAudio($(this));
+    initAudio($(this).parent());
     init = false;
     song.addEventListener('loadedmetadata', function() {
       playAudio();
@@ -150,11 +164,26 @@ $.get('assets/json/songs.json', function(data) {
     $('.js-volume').toggleClass('show');
   });
 
-  $('.js-volume').on('click', function(e) {
+  $('.js-volume, .js-dropdown-menu-timer').on('click', function(e) {
     e.stopPropagation();
   });
 
   $('body').on('click', function() {
     $('.js-volume').removeClass('show');
+  });
+
+  $('.js-loop-one, .js-loop-all').on('click', function() {
+    $(this).toggleClass('looped');
+  });
+
+  $('.js-timer').each(function() {
+    var min = parseInt($(this).attr('data-minute'));
+    $(this).on('change', function() {
+      if ($(this).is(':checked') && min !== 0) {
+        setTimeout(function() {
+          stopAudio();
+        }, min);
+      }
+    });
   });
 });

@@ -16,42 +16,72 @@
   <div class="container">
     <div class="songs">
       <div class="row no-gutters flex-column-reverse flex-md-row">
-        <div class="col-md-7">
+        <div class="col-md-7 col-lg-8">
           <div class="playlist">
             <h3 class="playlist__title">Playlist (<span class='js-playlist-total'></span>)</h3>
-            <ul class="playlist__list js-playlist"></ul>
+            <ul class="playlist__list js-playlist row"></ul>
           </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 col-lg-4">
           <div class="player">
             <div class="track-thumb js-track-thumb">
-              <img class="track-thumb__img js-track-thumb-img" src="assets/img/avatar-1.jpg">
+              <a href="https://www.facebook.com/hung.hoangvan.1001" target="_blank">
+                <img class="track-thumb__img js-track-thumb-img" src="assets/img/avatar-1.jpg">
+              </a>
             </div>
             <div class="track-details">
               <span class="track-details__title js-title"></span>
               <span class="track-details__artist js-artist"></span>
             </div>
             <div class="controls">
-              <div class="controls__icon controls__prev js-prev">
+              <div class="controls__icon controls__clock dropdown">
+                <i class="icons ion-android-alarm-clock" data-toggle="dropdown" data-display='static' title="Set timmer"></i>
+                <div class="dropdown-menu dropdown-menu__timmer js-dropdown-menu-timer">
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='0' id="timer0" name="timer" checked="checked">
+                    <label class="custom-control-label" for="timer0">None</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='1800000
+' id="timer30" name="timer">
+                    <label class="custom-control-label" for="timer30">30'</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='3600000' id="timer60" name="timer">
+                    <label class="custom-control-label" for="timer60">60'</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='5400000' id="timer90" name="timer">
+                    <label class="custom-control-label" for="timer90">90'</label>
+                  </div>
+                </div>
+              </div>
+              <div class="controls__icon controls__prev js-prev" title="Prev">
                 <i class="icons ion-ios-skipbackward"></i>
               </div>
-              <div class="controls__icon controls__play js-play">
+              <div class="controls__icon controls__play js-play" title="Play">
                 <i class="icons ion-ios-play"></i>
               </div>
-              <div class="controls__icon controls__pause js-pause d-none">
+              <div class="controls__icon controls__pause js-pause d-none" title="Pause">
                 <i class="icons ion-ios-pause"></i>
               </div>
-              <div class="controls__icon controls__next js-next">
+              <div class="controls__icon controls__next js-next" title="Next">
                 <i class="icons ion-ios-skipforward"></i>
               </div>
-              <div class="controls__icon controls__volume js-volume-toggle">
+              <div class="controls__icon controls__loop js-loop-one" title="Loop one">
+                <i class="icons ion-android-refresh"></i>
+              </div>
+              <div class="controls__icon controls__loopall js-loop-all looped" title="Loop all">
+                <i class="icons ion-android-sync"></i>
+              </div>
+              <div class="controls__icon controls__volume js-volume-toggle" title="Volume">
                 <i class="icons ion-android-volume-up"></i>
                 <div class="controls__volume-body js-volume"></div>
               </div>
             </div>
             <div class="duration">
-              <span class="duration__countup js-duration-countup"></span>
-              <span class="duration__coundown js-duration-coundown"></span>
+              <span class="duration__countup js-duration-countup">Start</span>
+              <span class="duration__coundown js-duration-coundown">End</span>
             </div>
             <div class="tracker"></div>
           </div>
@@ -61,6 +91,8 @@
     <div class="songs-footer">Trong tất cả mọi tiếng ồn, âm nhạc có lẽ là thứ ít gây khó chịu nhất.</div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
   <script src="assets/js/main.js"></script>
 </body>

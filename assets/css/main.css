@@ -7,6 +7,7 @@ body {
 .songs {
   background: url('../img/bg.png') no-repeat;
   background-size: cover;
+  border-radius: 6px;
   margin-top: 16px;
 }
 
@@ -17,7 +18,7 @@ body {
 
 .playlist__title {
   color: #eaeaea;
-  font-size: 14px;
+  font-size: 15px;
   margin-bottom: 16px;
 }
 
@@ -30,17 +31,28 @@ body {
 
 .playlist__list li {
   color: #eeeeee;
-  cursor: pointer;
   padding: 0 12px;
   transition: color ease-in-out .3s;
 }
 
-.playlist__list li:not(:last-child) {
-  margin-bottom: 4px;
+@media (min-width: 992px) {
+  .playlist__list li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
-.playlist__list li:hover {
+.playlist__list li span {
+  cursor: pointer;
+}
+
+.playlist__list li span:hover {
   color: #aaa;
+}
+
+.playlist__list li:not(:last-child) {
+  margin-bottom: 8px;
 }
 
 .playlist__list li.active {
@@ -111,6 +123,11 @@ body {
   font-size: 30px;
 }
 
+.controls__loop.looped,
+.controls__loopall.looped {
+  color: #62adfd;
+}
+
 .controls__volume {
   position: relative
 }
@@ -169,8 +186,20 @@ body {
 }
 
 .songs-footer {
-  text-align: center;
   font-size: 18px;
-  margin: 16px 0;
   font-style: italic;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.dropdown-menu__timmer {
+  padding: 8px 16px;
+}
+
+.dropdown-menu__timmer .custom-control:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.dropdown-menu__timmer .custom-control-label {
+  cursor: pointer;
 }
