@@ -62,6 +62,12 @@ $.get('assets/json/songs.json', function(data) {
         });
       } else {
         $('.js-track-thumb').removeClass('play');
+        if (next.length != 0) {
+          initAudio(next);
+          song.addEventListener('loadedmetadata', function() {
+            playAudio();
+          });
+        }
         return;
       }
     }, false);
@@ -141,9 +147,9 @@ $.get('assets/json/songs.json', function(data) {
   song.volume = 0.8;
   volume.slider({
     orientation: 'vertical',
-    range: 'max',
+    range: 'min',
+    min: 0,
     max: 100,
-    min: 1,
     value: 100,
     slide: function(event, ui) {
       song.volume = ui.value / 100;
@@ -159,17 +165,8 @@ $.get('assets/json/songs.json', function(data) {
     }
   });
 
-  $('.js-volume-toggle').on('click', function(e) {
+  $('.js-dropdown-menu-timer').on('click', function(e) {
     e.stopPropagation();
-    $('.js-volume').toggleClass('show');
-  });
-
-  $('.js-volume, .js-dropdown-menu-timer').on('click', function(e) {
-    e.stopPropagation();
-  });
-
-  $('body').on('click', function() {
-    $('.js-volume').removeClass('show');
   });
 
   $('.js-loop-one, .js-loop-all').on('click', function() {
