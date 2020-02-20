@@ -1,14 +1,15 @@
-$.get('assets/json/songs.json', function(data) {
-  var song, init = true,
+$.get('assets/json/songs.json', data => {
+  var song, alarm, init = true,
     tracker = $('.tracker'),
-    volume = $('.js-volume'),
-    randImg = ['avatar-1.jpg', 'avatar-2.jpg', 'avatar-3.jpg', 'avatar-4.jpg', 'avatar-5.jpg', 'avatar-6.jpg', 'avatar-7.jpg'];
+    randImg = [];
+
+  for (var i = 1; i <= 7; i++) randImg.push('avatar-' + i + '.jpg');
 
   $('.js-playlist-total').text(data.length);
 
-  data.forEach(function(item, index) {
+  data.forEach((item, index) => {
     $('.js-playlist')
-      .append('<li class="col-lg-4" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>')
+      .append('<li class="col-lg-4" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>');
   });
 
   initAudio($('.js-playlist li:first-child'));
@@ -24,7 +25,7 @@ $.get('assets/json/songs.json', function(data) {
       $('.js-track-thumb-img').attr('src', 'assets/img/' + randImg[Math.floor(Math.random() * randImg.length)]);
     }
     song = new Audio(url);
-    song.addEventListener('timeupdate', function() {
+    song.addEventListener('timeupdate', function () {
       var curtime = parseInt(song.currentTime, 10),
         timeLeft = parseInt(song.duration) - curtime,
         sUp = parseInt(song.currentTime % 60),
@@ -44,11 +45,11 @@ $.get('assets/json/songs.json', function(data) {
       tracker.slider('value', curtime);
     });
 
-    song.addEventListener('ended', function() {
+    song.addEventListener('ended', function () {
       var next = $('.js-playlist li.active').next();
       if ($('.js-loop-one').hasClass('looped')) {
         song.currentTime = 0;
-        song.play();
+        playRequest(song);
         return;
       }
 
@@ -57,14 +58,14 @@ $.get('assets/json/songs.json', function(data) {
           next = $('.js-playlist li:first-child');
         }
         initAudio(next);
-        song.addEventListener('loadedmetadata', function() {
+        song.addEventListener('loadedmetadata', function () {
           playAudio();
         });
       } else {
         $('.js-track-thumb').removeClass('play');
         if (next.length != 0) {
           initAudio(next);
-          song.addEventListener('loadedmetadata', function() {
+          song.addEventListener('loadedmetadata', function () {
             playAudio();
           });
         }
@@ -76,35 +77,46 @@ $.get('assets/json/songs.json', function(data) {
     elem.addClass('active');
   }
 
-  function playAudio() {
-    song.play();
+  var playRequest = (ele, pause = false) => {
+    var playPromise = ele.play();
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        if (pause === true) {
+          ele.pause();
+        }
+      }).catch(error => { });
+    }
+  };
+
+  var playAudio = () => {
+    playRequest(song);
     tracker.slider('option', 'max', song.duration);
     $('.js-play').addClass('d-none');
     $('.js-pause').addClass('d-block');
-  }
+  };
 
-  function stopAudio() {
-    song.pause();
+  var stopAudio = () => {
+    playRequest(song, true);
     $('.js-play').removeClass('d-none');
     $('.js-pause').removeClass('d-block');
-  }
+  };
 
-  $('.js-play').on('click', function(e) {
+  $('body').on('click', '.js-play', function(e) {
     e.preventDefault();
     $('.js-track-thumb').addClass('play');
     tracker.slider('option', 'max', song.duration);
-    song.play();
+    playRequest(song);
     $('.js-play').addClass('d-none');
     $('.js-pause').addClass('d-block');
   });
 
-  $('.js-pause').on('click', function(e) {
+  $('body').on('click', '.js-pause', function(e) {
     e.preventDefault();
     stopAudio();
     $('.js-track-thumb').removeClass('play');
   });
 
-  $('.js-next').click(function(e) {
+  $('body').on('click', '.js-next', function(e) {
     e.preventDefault();
     stopAudio();
     init = false;
@@ -113,13 +125,13 @@ $.get('assets/json/songs.json', function(data) {
       next = $('.js-playlist li:first-child');
     }
     initAudio(next);
-    song.addEventListener('loadedmetadata', function() {
+    song.addEventListener('loadedmetadata', function () {
       playAudio();
       $('.js-track-thumb').addClass('play');
     });
   });
 
-  $('.js-prev').click(function(e) {
+  $('body').on('click', '.js-prev', function(e) {
     e.preventDefault();
     stopAudio();
     init = false;
@@ -128,59 +140,91 @@ $.get('assets/json/songs.json', function(data) {
       prev = $('.js-playlist li:last-child');
     }
     initAudio(prev);
-    song.addEventListener('loadedmetadata', function() {
+    song.addEventListener('loadedmetadata', function () {
       playAudio();
       $('.js-track-thumb').addClass('play');
     });
   });
 
-  $('.js-list-song').on('click', function() {
+  $('body').on('click', '.js-list-song', function() {
     stopAudio();
     initAudio($(this).parent());
     init = false;
-    song.addEventListener('loadedmetadata', function() {
+    song.addEventListener('loadedmetadata', function () {
       playAudio();
       $('.js-track-thumb').addClass('play');
     });
   });
 
-  song.volume = 0.8;
-  volume.slider({
-    orientation: 'vertical',
-    range: 'min',
-    min: 0,
-    max: 100,
-    value: 100,
-    slide: function(event, ui) {
-      song.volume = ui.value / 100;
-    }
+  song.volume = 1;
+
+  $('.js-controls').clone(true).appendTo('.js-fixed-player');
+
+  $('.js-volume').each(function () {
+    $(this).slider({
+      classes: {
+        'ui-slider-handle': 'controls__volume--handle',
+        'ui-slider-range': 'controls__volume--range'
+      },
+      orientation: 'vertical',
+      range: 'min',
+      min: 0,
+      max: 100,
+      value: 100,
+      slide: function (event, ui) {
+        song.volume = ui.value / 100;
+        $('.js-volume').not(this).slider('value', ui.value);
+      }
+    });
   });
 
   tracker.slider({
+    classes: {
+      'ui-slider-handle': 'tracker--handle',
+      'ui-slider-range': 'tracker--range'
+    },
     range: 'min',
     min: 0,
     max: 10,
-    slide: function(event, ui) {
+    slide: function (event, ui) {
       song.currentTime = ui.value;
     }
   });
 
-  $('.js-dropdown-menu-timer').on('click', function(e) {
+  $('body').on('click', '.js-dropdown-menu-timer', function(e) {
     e.stopPropagation();
   });
 
-  $('.js-loop-one, .js-loop-all').on('click', function() {
-    $(this).toggleClass('looped');
+  $('body').on('click', '.js-loop-one', function() {
+    $('.js-loop-one').toggleClass('looped');
   });
 
-  $('.js-timer').each(function() {
-    var min = parseInt($(this).attr('data-minute'));
-    $(this).on('change', function() {
-      if ($(this).is(':checked') && min !== 0) {
-        setTimeout(function() {
-          stopAudio();
-        }, min);
-      }
-    });
+  $('body').on('click', '.js-loop-all', function() {
+    $('.js-loop-all').toggleClass('looped');
+  });
+
+  $('.js-fixed-player .js-timer').each(function () {
+    var $this = $(this);
+    $this.attr({
+      id: $this.attr('id') + '-c',
+      name: $this.attr('name') + '-c'
+    }).next().attr('for', $this.attr('id'));
+  });
+
+  $('.js-timer-0').prop('checked', true);
+
+  $('body').on('change', '.js-timer', function () {
+    var minute = $(this).attr('data-minute'),
+      minutes = parseInt(minute, 10) * 60000;
+
+    $('.js-timer[data-minute="' + minute + '"]').prop('checked', true);
+    if (parseInt(minute) > 0) {
+      alarm = setTimeout(() => {
+        stopAudio();
+      }, minutes);
+    } else {
+      window.clearTimeout(alarm);
+      return;
+    }
   });
 });
