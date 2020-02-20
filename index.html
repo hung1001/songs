@@ -15,10 +15,10 @@
 <body>
   <div class="container">
     <div class="songs">
+      <div class="playlist__ribbon"><span>Playlist (<span class='js-playlist-total'></span>)</span></div>
       <div class="row no-gutters flex-column-reverse flex-md-row">
         <div class="col-md-7 col-lg-8">
           <div class="playlist">
-            <h3 class="playlist__title">Playlist (<span class='js-playlist-total'></span>)</h3>
             <ul class="playlist__list js-playlist row"></ul>
           </div>
         </div>
@@ -33,25 +33,24 @@
               <span class="track-details__title js-title"></span>
               <span class="track-details__artist js-artist"></span>
             </div>
-            <div class="controls">
+            <div class="controls js-controls">
               <div class="controls__icon controls__clock dropdown">
                 <i class="icons ion-android-alarm-clock" data-toggle="dropdown" data-display='static' title="Set timmer"></i>
                 <div class="dropdown-menu dropdown-menu__timmer js-dropdown-menu-timer">
                   <div class="custom-control custom-radio">
-                    <input type="radio" class="js-timer custom-control-input" data-minute='0' id="timer0" name="timer" checked="checked">
+                    <input type="radio" class="js-timer js-timer-0 custom-control-input" data-minute='0' id="timer0" name="timer">
                     <label class="custom-control-label" for="timer0">None</label>
                   </div>
                   <div class="custom-control custom-radio">
-                    <input type="radio" class="js-timer custom-control-input" data-minute='1800000
-' id="timer30" name="timer">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='30' id="timer30" name="timer">
                     <label class="custom-control-label" for="timer30">30'</label>
                   </div>
                   <div class="custom-control custom-radio">
-                    <input type="radio" class="js-timer custom-control-input" data-minute='3600000' id="timer60" name="timer">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='60' id="timer60" name="timer">
                     <label class="custom-control-label" for="timer60">60'</label>
                   </div>
                   <div class="custom-control custom-radio">
-                    <input type="radio" class="js-timer custom-control-input" data-minute='5400000' id="timer90" name="timer">
+                    <input type="radio" class="js-timer custom-control-input" data-minute='90' id="timer90" name="timer">
                     <label class="custom-control-label" for="timer90">90'</label>
                   </div>
                 </div>
@@ -90,8 +89,18 @@
         </div>
       </div>
     </div>
-    <div class="songs-footer">Trong tất cả mọi tiếng ồn, âm nhạc có lẽ là thứ ít gây khó chịu nhất.</div>
+    <div class="songs-footer">
+      <div class="songs-footer__left">
+        Trong tất cả mọi tiếng ồn, âm nhạc có lẽ là thứ ít gây khó chịu nhất.
+      </div>
+      <div class="songs-footer__right">
+        <a class="songs-footer__link songs-footer__link--twitter ion-social-twitter" href="https://twitter.com/hunghv1001"></a>
+        <a class="songs-footer__link songs-footer__link--rss ion-social-rss" href="https://www.hung1001.com/"></a>
+        <a class="songs-footer__link songs-footer__link--github ion-social-github" href="https://github.com/hung1001/songs"></a>
+      </div>
+    </div>
   </div>
+  <div class="fixed-player js-fixed-player"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
