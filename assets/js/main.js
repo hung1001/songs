@@ -3,7 +3,7 @@ $.get('assets/json/songs.json', data => {
     tracker = $('.tracker'),
     randImg = [];
 
-  for (var i = 1; i <= 7; i++) randImg.push('avatar-' + i + '.jpg');
+  for (var i = 1; i <= 8; i++) randImg.push('avatar-' + i + '.jpg');
 
   $('.js-playlist-total').text(data.length);
 
@@ -163,8 +163,8 @@ $.get('assets/json/songs.json', data => {
   $('.js-volume').each(function () {
     $(this).slider({
       classes: {
-        'ui-slider-handle': 'controls__volume--handle',
-        'ui-slider-range': 'controls__volume--range'
+        'ui-slider-handle': 'controls__volume--handle js-volume-handle',
+        'ui-slider-range': 'controls__volume--range js-volume-range'
       },
       orientation: 'vertical',
       range: 'min',
@@ -172,10 +172,33 @@ $.get('assets/json/songs.json', data => {
       max: 100,
       value: 100,
       slide: function (event, ui) {
-        song.volume = ui.value / 100;
+        var _value = ui.value;
+        song.volume = _value / 100;
         $('.js-volume').not(this).slider('value', ui.value);
+        $('.js-volume-handle').removeClass('b-0');
+        $('.js-volume-range').removeClass('h-0');
+        if (_value == 0) {
+          song.muted = true;
+          $('.js-volume-toggle .icons').addClass('off');
+        } else {
+          song.muted = false;
+          $('.js-volume-toggle .icons').removeClass('off');
+        }
       }
     });
+  });
+
+  $('body').on('click', '.js-volume-toggle .icons', function() {
+    song.muted = !song.muted;
+    if (song.muted) {
+      $('.js-volume-toggle .icons').addClass('off');
+      $('.js-volume-handle').addClass('b-0');
+      $('.js-volume-range').addClass('h-0');
+    } else {
+      $('.js-volume-toggle .icons').removeClass('off');
+      $('.js-volume-handle').removeClass('b-0');
+      $('.js-volume-range').removeClass('h-0');
+    }
   });
 
   tracker.slider({

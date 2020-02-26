@@ -81,13 +81,34 @@ body {
 }
 
 .track-thumb {
+  border-radius: 50%;
   height: 220px;
   margin: 16px auto;
+  position: relative;
   width: 220px;
 }
 
-.track-thumb.play {
-  animation: spin 12s linear infinite;
+.track-thumb a {
+  position: relative;
+  z-index: 2;
+}
+
+.track-thumb.play::after {
+  background: url("../img/playing.gif") no-repeat;
+  background-size: 18px;
+  bottom: 5px;
+  content: '';
+  display: block;
+  height: 18px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 18px;
+  z-index: 2;
+}
+
+.track-thumb.play img {
+  animation: spin 15s linear infinite;
 }
 
 @keyframes spin {
@@ -130,7 +151,7 @@ body {
 .controls__icon {
   color: #f9f9f9;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   margin: 0 12px;
 }
 
@@ -211,11 +232,20 @@ body {
   left: 50%;
   position: absolute;
   transform: translateX(-50%);
+  transition: background .2s ease;
   width: 13px;
+}
+
+.controls__volume--handle:hover {
+  background: #aaa;
 }
 
 .controls__volume--handle:focus {
   outline: 0;
+}
+
+.controls__volume .icons.off::before{
+  content: "\f3b9";
 }
 
 .tracker {
@@ -382,4 +412,12 @@ body {
   position: absolute;
   top: 100%;
   z-index: -1;
+}
+
+.h-0 {
+  height: 0 !important;
+}
+
+.b-0 {
+  bottom: 0 !important;
 }
