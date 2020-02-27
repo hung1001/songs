@@ -265,3 +265,8 @@ $.get('assets/json/songs.json', data => {
     $('.js-pause').removeClass('d-flex');
   };
 });
+
+$(window).on('load', function () {
+  $('body').append($('<script />', { src: 'https://buttons.github.io/buttons.js' }));
+  $('.js-github-btn').removeClass('invisible');
+});

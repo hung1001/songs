@@ -9,7 +9,7 @@ body {
   background: url("../img/bg.png") no-repeat;
   background-size: cover;
   border-radius: 6px;
-  margin-top: 16px;
+  margin-top: 12px;
   position: relative;
 }
 
@@ -427,4 +427,10 @@ body {
   position: absolute;
   top: 100%;
   z-index: -1;
+}
+
+.github-btn {
+  min-height: 42px;
+  padding-top: 16px;
+  text-align: right;
 }
