@@ -1,7 +1,7 @@
 $.get('assets/json/songs.json', data => {
   var song, alarm, init = true,
     tracker = $('.tracker'),
-    randImg = [];
+    randImg = [], curVolume = 100;
 
   for (var i = 1; i <= 8; i++) randImg.push('avatar-' + i + '.jpg');
 
@@ -9,7 +9,7 @@ $.get('assets/json/songs.json', data => {
 
   data.forEach((item, index) => {
     $('.js-playlist')
-      .append('<li class="col-lg-4" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>');
+      .append('<li class="col-lg-6" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>');
   });
 
   initAudio($('.js-playlist li:first-child'));
@@ -53,23 +53,31 @@ $.get('assets/json/songs.json', data => {
         return;
       }
 
-      if ($('.js-loop-all').hasClass('looped')) {
-        if (next.length == 0) {
-          next = $('.js-playlist li:first-child');
-        }
+      if ($('.js-shuffle').hasClass('shuffled')) {
+        next = $('.js-playlist li').eq(Math.floor(Math.random() * data.length));
         initAudio(next);
         song.addEventListener('loadedmetadata', function () {
           playAudio();
         });
       } else {
-        $('.js-track-thumb').removeClass('play');
-        if (next.length != 0) {
+        if ($('.js-loop-all').hasClass('looped')) {
+          if (next.length == 0) {
+            next = $('.js-playlist li:first-child');
+          }
           initAudio(next);
           song.addEventListener('loadedmetadata', function () {
             playAudio();
           });
+        } else {
+          $('.js-track-thumb').removeClass('play');
+          if (next.length != 0) {
+            initAudio(next);
+            song.addEventListener('loadedmetadata', function () {
+              playAudio();
+            });
+          }
+          return;
         }
-        return;
       }
     }, false);
 
@@ -92,37 +100,42 @@ $.get('assets/json/songs.json', data => {
     playRequest(song);
     tracker.slider('option', 'max', song.duration);
     $('.js-play').addClass('d-none');
-    $('.js-pause').addClass('d-block');
+    $('.js-pause').addClass('d-flex');
   };
 
   var stopAudio = () => {
     playRequest(song, true);
     $('.js-play').removeClass('d-none');
-    $('.js-pause').removeClass('d-block');
+    $('.js-pause').removeClass('d-flex');
   };
 
-  $('body').on('click', '.js-play', function(e) {
+  $('body').on('click', '.js-play', function (e) {
     e.preventDefault();
     $('.js-track-thumb').addClass('play');
     tracker.slider('option', 'max', song.duration);
     playRequest(song);
     $('.js-play').addClass('d-none');
-    $('.js-pause').addClass('d-block');
+    $('.js-pause').addClass('d-flex');
   });
 
-  $('body').on('click', '.js-pause', function(e) {
+  $('body').on('click', '.js-pause', function (e) {
     e.preventDefault();
     stopAudio();
     $('.js-track-thumb').removeClass('play');
   });
 
-  $('body').on('click', '.js-next', function(e) {
+  $('body').on('click', '.js-next', function (e) {
     e.preventDefault();
     stopAudio();
+    var next;
     init = false;
-    var next = $('.js-playlist li.active').next();
-    if (next.length === 0) {
-      next = $('.js-playlist li:first-child');
+    if ($('.js-shuffle').hasClass('shuffled')) {
+      next = $('.js-playlist li').eq(Math.floor(Math.random() * data.length));
+    } else {
+      next = $('.js-playlist li.active').next();
+      if (next.length === 0) {
+        next = $('.js-playlist li:first-child');
+      }
     }
     initAudio(next);
     song.addEventListener('loadedmetadata', function () {
@@ -131,13 +144,18 @@ $.get('assets/json/songs.json', data => {
     });
   });
 
-  $('body').on('click', '.js-prev', function(e) {
+  $('body').on('click', '.js-prev', function (e) {
     e.preventDefault();
     stopAudio();
+    var prev;
     init = false;
-    var prev = $('.js-playlist li.active').prev();
-    if (prev.length === 0) {
-      prev = $('.js-playlist li:last-child');
+    if ($('.js-shuffle').hasClass('shuffled')) {
+      prev = $('.js-playlist li').eq(Math.floor(Math.random() * data.length));
+    } else {
+      prev = $('.js-playlist li.active').prev();
+      if (prev.length === 0) {
+        prev = $('.js-playlist li:last-child');
+      }
     }
     initAudio(prev);
     song.addEventListener('loadedmetadata', function () {
@@ -146,7 +164,7 @@ $.get('assets/json/songs.json', data => {
     });
   });
 
-  $('body').on('click', '.js-list-song', function() {
+  $('body').on('click', '.js-list-song', function () {
     stopAudio();
     initAudio($(this).parent());
     init = false;
@@ -175,8 +193,6 @@ $.get('assets/json/songs.json', data => {
         var _value = ui.value;
         song.volume = _value / 100;
         $('.js-volume').not(this).slider('value', ui.value);
-        $('.js-volume-handle').removeClass('b-0');
-        $('.js-volume-range').removeClass('h-0');
         if (_value == 0) {
           song.muted = true;
           $('.js-volume-toggle .icons').addClass('off');
@@ -184,20 +200,22 @@ $.get('assets/json/songs.json', data => {
           song.muted = false;
           $('.js-volume-toggle .icons').removeClass('off');
         }
+
+        if (!song.muted) {
+          curVolume = _value;
+        }
       }
     });
   });
 
-  $('body').on('click', '.js-volume-toggle .icons', function() {
+  $('body').on('click', '.js-volume-toggle .icons', function () {
     song.muted = !song.muted;
     if (song.muted) {
       $('.js-volume-toggle .icons').addClass('off');
-      $('.js-volume-handle').addClass('b-0');
-      $('.js-volume-range').addClass('h-0');
+      $('.js-volume').slider('value', 0);
     } else {
       $('.js-volume-toggle .icons').removeClass('off');
-      $('.js-volume-handle').removeClass('b-0');
-      $('.js-volume-range').removeClass('h-0');
+      $('.js-volume').slider('value', curVolume);
     }
   });
 
@@ -214,16 +232,23 @@ $.get('assets/json/songs.json', data => {
     }
   });
 
-  $('body').on('click', '.js-dropdown-menu-timer', function(e) {
+  $('body').on('click', '.js-dropdown-menu-timer', function (e) {
     e.stopPropagation();
   });
 
-  $('body').on('click', '.js-loop-one', function() {
+  $('body').on('click', '.js-loop-one', function () {
     $('.js-loop-one').toggleClass('looped');
+    $('.js-shuffle').removeClass('shuffled');
   });
 
-  $('body').on('click', '.js-loop-all', function() {
+  $('body').on('click', '.js-loop-all', function () {
     $('.js-loop-all').toggleClass('looped');
+    $('.js-shuffle').removeClass('shuffled');
+  });
+
+  $('body').on('click', '.js-shuffle', function () {
+    $('.js-shuffle').toggleClass('shuffled');
+    $('.js-loop-all, .js-loop-one').removeClass('looped');
   });
 
   $('.js-fixed-player .js-timer').each(function () {
