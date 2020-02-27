@@ -46,8 +46,26 @@ body {
 
 .playlist__list li {
   color: #eeeeee;
+  margin-bottom: 8px;
   padding: 0 12px;
+  position: relative;
   transition: color ease-in-out .3s;
+}
+
+.playlist__list li.active.playing:after {
+  background: url("../img/playing.gif") no-repeat;
+  background-size: 14px;
+  bottom: 3px;
+  content: '';
+  display: block;
+  height: 14px;
+  position: absolute;
+  right: 12px;
+  width: 14px;
+}
+
+.playlist__list li.active.playing.pause:after {
+  background-image: url("../img/playing.png");
 }
 
 @media (min-width: 992px) {
@@ -66,14 +84,11 @@ body {
 
 .playlist__list li span {
   cursor: pointer;
+  transition: all .25s ease;
 }
 
 .playlist__list li span:hover {
   color: #aaa;
-}
-
-.playlist__list li:not(:last-child) {
-  margin-bottom: 8px;
 }
 
 .playlist__list li.active {
@@ -84,31 +99,15 @@ body {
   border-radius: 50%;
   height: 220px;
   margin: 16px auto;
-  position: relative;
   width: 220px;
 }
 
-.track-thumb a {
-  position: relative;
-  z-index: 2;
-}
-
-.track-thumb.play::after {
-  background: url("../img/playing.gif") no-repeat;
-  background-size: 18px;
-  bottom: 5px;
-  content: '';
-  display: block;
-  height: 18px;
-  left: 50%;
-  position: absolute;
-  transform: translateX(-50%);
-  width: 18px;
-  z-index: 2;
-}
-
-.track-thumb.play img {
+.track-thumb.playing img {
   animation: spin 15s linear infinite;
+}
+
+.track-thumb.playing.pause img {
+  animation-play-state: paused;
 }
 
 @keyframes spin {
