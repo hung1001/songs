@@ -14,15 +14,19 @@
 
 <body>
   <div class="container">
+    <div class="github-btn js-github-btn invisible">
+      <a class="github-button" href="https://github.com/hung1001" data-show-count="true" aria-label="Follow @hung1001 on GitHub">Follow @hung1001</a>
+      <a class="github-button" href="https://github.com/hung1001/songs" data-icon="octicon-star" data-show-count="true" aria-label="Star hung1001/songs on GitHub">Star</a>
+    </div>
     <div class="songs">
       <div class="playlist__ribbon"><span>Playlist (<span class='js-playlist-total'></span>)</span></div>
-      <div class="row no-gutters flex-column-reverse flex-md-row">
-        <div class="col-md-7 col-lg-8">
+      <div class="row no-gutters flex-column-reverse flex-lg-row">
+        <div class="col-lg-7">
           <div class="playlist">
             <ul class="playlist__list js-playlist row"></ul>
           </div>
         </div>
-        <div class="col-md-5 col-lg-4">
+        <div class="col-lg-5">
           <div class="player">
             <div class="track-thumb js-track-thumb">
               <a href="https://www.facebook.com/hung.hoangvan.1001" target="_blank">
@@ -34,8 +38,11 @@
               <span class="track-details__artist js-artist"></span>
             </div>
             <div class="controls js-controls">
+              <div class="controls__icon controls__shuffle js-shuffle" title="Shuffle">
+                <i class="icons ion-ios-shuffle-strong"></i>
+              </div>
               <div class="controls__icon controls__clock dropdown">
-                <i class="icons ion-android-alarm-clock" data-toggle="dropdown" data-display='static' title="Set timmer"></i>
+                <i class="icons ion-android-alarm-clock" data-toggle="dropdown" data-display='static' title="Set timer"></i>
                 <div class="dropdown-menu dropdown-menu__timmer js-dropdown-menu-timer">
                   <div class="custom-control custom-radio">
                     <input type="radio" class="js-timer js-timer-0 custom-control-input" data-minute='0' id="timer0" name="timer">
@@ -94,9 +101,9 @@
         Trong tất cả mọi tiếng ồn, âm nhạc có lẽ là thứ ít gây khó chịu nhất.
       </div>
       <div class="songs-footer__right">
-        <a class="songs-footer__link songs-footer__link--twitter ion-social-twitter" href="https://twitter.com/hunghv1001"></a>
-        <a class="songs-footer__link songs-footer__link--rss ion-social-rss" href="https://www.hung1001.com/"></a>
-        <a class="songs-footer__link songs-footer__link--github ion-social-github" href="https://github.com/hung1001/songs"></a>
+        <a class="songs-footer__link songs-footer__link--twitter ion-social-twitter" href="https://twitter.com/hunghv1001/" target="_blank"></a>
+        <a class="songs-footer__link songs-footer__link--rss ion-social-rss" href="https://www.hung1001.com/" target="_blank"></a>
+        <a class="songs-footer__link songs-footer__link--github ion-social-github" href="https://github.com/hung1001/" target="_blank"></a>
       </div>
     </div>
   </div>

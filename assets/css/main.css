@@ -9,7 +9,7 @@ body {
   background: url("../img/bg.png") no-repeat;
   background-size: cover;
   border-radius: 6px;
-  margin-top: 16px;
+  margin-top: 12px;
   position: relative;
 }
 
@@ -46,8 +46,26 @@ body {
 
 .playlist__list li {
   color: #eeeeee;
+  margin-bottom: 8px;
   padding: 0 12px;
+  position: relative;
   transition: color ease-in-out .3s;
+}
+
+.playlist__list li.active.playing:after {
+  background: url("../img/playing.gif") no-repeat;
+  background-size: 14px;
+  bottom: 3px;
+  content: '';
+  display: block;
+  height: 14px;
+  position: absolute;
+  right: 12px;
+  width: 14px;
+}
+
+.playlist__list li.active.playing.pause:after {
+  background-image: url("../img/playing.png");
 }
 
 @media (min-width: 992px) {
@@ -66,14 +84,11 @@ body {
 
 .playlist__list li span {
   cursor: pointer;
+  transition: all .25s ease;
 }
 
 .playlist__list li span:hover {
   color: #aaa;
-}
-
-.playlist__list li:not(:last-child) {
-  margin-bottom: 8px;
 }
 
 .playlist__list li.active {
@@ -81,13 +96,18 @@ body {
 }
 
 .track-thumb {
+  border-radius: 50%;
   height: 220px;
   margin: 16px auto;
   width: 220px;
 }
 
-.track-thumb.play {
-  animation: spin 12s linear infinite;
+.track-thumb.playing img {
+  animation: spin 15s linear infinite;
+}
+
+.track-thumb.playing.pause img {
+  animation-play-state: paused;
 }
 
 @keyframes spin {
@@ -130,22 +150,42 @@ body {
 .controls__icon {
   color: #f9f9f9;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   margin: 0 12px;
+}
+
+.controls__icon i {
+  transition: opacity .3s ease;
 }
 
 .controls__icon:hover i {
   opacity: .6;
-  transition: all .3s ease;
 }
 
 .controls__play,
 .controls__pause {
-  font-size: 30px;
+  align-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+}
+
+.controls__play .icons,
+.controls__pause .icons {
+  line-height: 0;
+}
+
+.player .controls__pause .icons {
+  padding-right: 1px;
 }
 
 .controls__loop.looped,
-.controls__loopall.looped {
+.controls__loopall.looped,
+.controls__shuffle.shuffled {
   color: #62adfd;
 }
 
@@ -159,13 +199,13 @@ body {
   bottom: 30px;
   box-shadow: 0px 0px 0px 1px rgba(170, 170, 170, 0.25);
   height: 120px;
-  left: -3px;
+  left: -5px;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   transition: all .3s ease;
   visibility: hidden;
-  width: 20px;
+  width: 25px;
   z-index: 10;
 }
 
@@ -175,7 +215,7 @@ body {
   content: '';
   height: 30px;
   position: absolute;
-  width: 20px;
+  width: 25px;
   z-index: -1;
 }
 
@@ -186,7 +226,7 @@ body {
 }
 
 .controls__volume-inner {
-  bottom: 10px;
+  bottom: 8px;
   height: calc(100% - 30px);
   left: 50%;
   position: absolute;
@@ -199,7 +239,7 @@ body {
   left: 50%;
   position: absolute;
   transform: translateX(-50%);
-  width: 5px;
+  width: 6px;
 }
 
 .controls__volume--handle {
@@ -207,15 +247,24 @@ body {
   border-radius: 50%;
   cursor: pointer;
   display: block;
-  height: 13px;
+  height: 15px;
   left: 50%;
   position: absolute;
   transform: translateX(-50%);
-  width: 13px;
+  transition: background .2s ease;
+  width: 15px;
+}
+
+.controls__volume--handle:hover {
+  background: #aaa;
 }
 
 .controls__volume--handle:focus {
   outline: 0;
+}
+
+.controls__volume .icons.off::before{
+  content: "\f3b9";
 }
 
 .tracker {
@@ -324,10 +373,6 @@ body {
   z-index: 1000;
 }
 
-.fixed-player .controls {
-  margin: 8px 0;
-}
-
 .fixed-player .dropdown-menu {
   bottom: 100%;
   top: auto;
@@ -382,4 +427,10 @@ body {
   position: absolute;
   top: 100%;
   z-index: -1;
+}
+
+.github-btn {
+  min-height: 42px;
+  padding-top: 16px;
+  text-align: right;
 }
