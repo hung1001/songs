@@ -1,9 +1,10 @@
 $.get('assets/json/songs.json', data => {
   var song, alarm, init = true,
     tracker = $('.tracker'),
-    randImg = [], curVolume = 100;
+    randImg = [], randBg = [], curVolume = 100;
 
   for (var i = 1; i <= 8; i++) randImg.push('avatar-' + i + '.jpg');
+  for (var j = 1; j <= 10; j++) randBg.push('bg-' + j + '.png');
 
   $('.js-playlist-total').text(data.length);
 
@@ -59,12 +60,14 @@ $.get('assets/json/songs.json', data => {
   });
 
   $('body').on('click', '.js-list-song', function () {
-    stopAudio();
-    initAudio($(this).parent());
-    init = false;
-    song.addEventListener('loadedmetadata', function () {
-      playAudio();
-    });
+    if (!$(this).parent().hasClass('active')) {
+      stopAudio();
+      init = false;
+      initAudio($(this).parent());
+      song.addEventListener('loadedmetadata', function () {
+        playAudio();
+      });
+    }
   });
 
   song.volume = 1;
@@ -175,6 +178,7 @@ $.get('assets/json/songs.json', data => {
     song = new Audio(elem.attr('data-url'));
     if (!init) {
       $('.js-track-thumb-img').attr('src', 'assets/img/' + randImg[Math.floor(Math.random() * randImg.length)]);
+      $('.js-songs, .js-fixed-player').css('background-image', 'url(assets/img/' + randBg[Math.floor(Math.random() * randBg.length)] + ')');
       song.volume = $('.js-volume').slider('value') / 100;
     }
     song.addEventListener('timeupdate', function () {
