@@ -1,7 +1,8 @@
 $.get('assets/json/songs.json', data => {
   var song, alarm, init = true,
     tracker = $('.tracker'),
-    randImg = [], randBg = [], curVolume = 100;
+    randImg = [], randBg = [], curVolume = 100,
+    rootFolder = 'https://truongthangit-my.sharepoint.com/personal/hung1001_office365edu_work/Documents/Songs/';
 
   for (var i = 1; i <= 8; i++) randImg.push('avatar-' + i + '.jpg');
   for (var j = 1; j <= 10; j++) randBg.push('bg-' + j + '.png');
@@ -10,10 +11,8 @@ $.get('assets/json/songs.json', data => {
 
   data.forEach((item, index) => {
     $('.js-playlist')
-      .append('<li class="col-lg-6" title="' + item.title + '" data-url="' + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>');
+      .append('<li class="col-lg-6" title="' + item.title + '" data-url="' + rootFolder + item.url + '"><span class="js-list-song">' + (index + 1) + '. ' + item.title + '</span></li>');
   });
-
-  initAudio($('.js-playlist li:first-child'));
 
   $('body').on('click', '.js-play', function () {
     playAudio();
@@ -69,8 +68,6 @@ $.get('assets/json/songs.json', data => {
       });
     }
   });
-
-  song.volume = 1;
 
   $('.js-controls').clone(true).appendTo('.js-fixed-player');
 
@@ -268,9 +265,11 @@ $.get('assets/json/songs.json', data => {
     $('.js-play').removeClass('d-none');
     $('.js-pause').removeClass('d-flex');
   };
-});
 
-$(window).on('load', function () {
-  $('body').append($('<script />', { src: 'https://buttons.github.io/buttons.js' }));
-  $('.js-github-btn').removeClass('invisible');
+  $(window).on('load', function () {
+    $('body').append($('<script />', { src: 'https://buttons.github.io/buttons.js' }));
+    $('.js-github-btn').removeClass('invisible');
+    initAudio($('.js-playlist li:first-child'));
+    song.volume = 1;
+  });
 });
