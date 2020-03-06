@@ -91,7 +91,7 @@
               <span class="duration__countup js-duration-countup">Start</span>
               <span class="duration__coundown js-duration-coundown">End</span>
             </div>
-            <div class="tracker"></div>
+            <div class="tracker js-tracker"></div>
           </div>
         </div>
       </div>
@@ -107,7 +107,18 @@
       </div>
     </div>
   </div>
-  <div class="fixed-player js-fixed-player"></div>
+  <div class="fixed-player js-fixed-player">
+    <div class="container">
+      <div class="row align-items-lg-center">
+        <div class="col col-lg-auto">
+          <div class="fixed-player__control js-fixed-player-control"></div>
+        </div>
+        <div class="d-none d-lg-block col-lg">
+          <div class="fixed-player__tracker js-fixed-player-tracker"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
