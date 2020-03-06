@@ -1,6 +1,5 @@
 $.get('assets/json/songs.json', data => {
   var song, alarm, init = true,
-    tracker = $('.tracker'),
     randImg = [], randBg = [], curVolume = 100,
     rootFolder = 'https://truongthangit-my.sharepoint.com/personal/hung1001_office365edu_work/Documents/Songs/';
 
@@ -23,9 +22,9 @@ $.get('assets/json/songs.json', data => {
   });
 
   $('body').on('click', '.js-next', function () {
+    init = false;
     stopAudio();
     var next;
-    init = false;
     if ($('.js-shuffle').hasClass('shuffled')) {
       next = $('.js-playlist li').eq(Math.floor(Math.random() * data.length));
     } else {
@@ -41,9 +40,9 @@ $.get('assets/json/songs.json', data => {
   });
 
   $('body').on('click', '.js-prev', function () {
+    init = false;
     stopAudio();
     var prev;
-    init = false;
     if ($('.js-shuffle').hasClass('shuffled')) {
       prev = $('.js-playlist li').eq(Math.floor(Math.random() * data.length));
     } else {
@@ -60,8 +59,8 @@ $.get('assets/json/songs.json', data => {
 
   $('body').on('click', '.js-list-song', function () {
     if (!$(this).parent().hasClass('active')) {
-      stopAudio();
       init = false;
+      stopAudio();
       initAudio($(this).parent());
       song.addEventListener('loadedmetadata', function () {
         playAudio();
@@ -69,7 +68,8 @@ $.get('assets/json/songs.json', data => {
     }
   });
 
-  $('.js-controls').clone(true).appendTo('.js-fixed-player');
+  $('.js-controls').clone(true).appendTo('.js-fixed-player-control');
+  $('.js-tracker').clone(true).appendTo('.js-fixed-player-tracker');
 
   $('.js-volume').each(function () {
     $(this).slider({
@@ -101,6 +101,22 @@ $.get('assets/json/songs.json', data => {
     });
   });
 
+  $('.js-tracker').each(function () {
+    $(this).slider({
+      classes: {
+        'ui-slider-handle': 'tracker--handle js-tracker-handle d-none',
+        'ui-slider-range': 'tracker--range js-tracker-range'
+      },
+      range: 'min',
+      min: 0,
+      max: 10,
+      slide: function (event, ui) {
+        song.currentTime = ui.value;
+        $('.js-tracker').not(this).slider('value', ui.value);
+      }
+    });
+  });
+
   $('body').on('click', '.js-volume-toggle .icons', function () {
     song.muted = !song.muted;
     if (song.muted) {
@@ -109,19 +125,6 @@ $.get('assets/json/songs.json', data => {
     } else {
       $('.js-volume-toggle .icons').removeClass('off');
       $('.js-volume').slider('value', curVolume);
-    }
-  });
-
-  tracker.slider({
-    classes: {
-      'ui-slider-handle': 'tracker--handle',
-      'ui-slider-range': 'tracker--range'
-    },
-    range: 'min',
-    min: 0,
-    max: 10,
-    slide: function (event, ui) {
-      song.currentTime = ui.value;
     }
   });
 
@@ -173,30 +176,38 @@ $.get('assets/json/songs.json', data => {
     $('.js-title').text(elem.text());
     $('.js-artist').text('Hung1001');
     song = new Audio(elem.attr('data-url'));
+
     if (!init) {
       $('.js-track-thumb-img').attr('src', 'assets/img/' + randImg[Math.floor(Math.random() * randImg.length)]);
       $('.js-songs, .js-fixed-player').css('background-image', 'url(assets/img/' + randBg[Math.floor(Math.random() * randBg.length)] + ')');
       song.volume = $('.js-volume').slider('value') / 100;
     }
+
     song.addEventListener('timeupdate', function () {
       var curtime = parseInt(song.currentTime, 10),
         timeLeft = parseInt(song.duration) - curtime,
         sUp = parseInt(song.currentTime % 60),
         mUp = parseInt((song.currentTime / 60) % 60),
         sDown = timeLeft % 60,
-        mDown = Math.floor(timeLeft / 60) % 60;
+        mDown = Math.floor(timeLeft / 60) % 60,
+        sDuration = parseInt(song.duration) % 60,
+        mDuration = Math.floor(song.duration / 60) % 60;
+
+      sUp = sUp < 10 ? '0' + sUp : sUp;
+      mUp = mUp < 10 ? '0' + mUp : mUp;
       sDown = sDown < 10 ? '0' + sDown : sDown;
       mDown = mDown < 10 ? '0' + mDown : mDown;
+      sDuration = sDuration < 10 ? '0' + sDuration : sDuration;
+      mDuration = mDuration < 10 ? '0' + mDuration : mDuration;
 
-      if (sUp < 10) {
-        $('.js-duration-countup').html(mUp + ':0' + sUp);
-      } else {
-        $('.js-duration-countup').html(mUp + ':' + sUp);
+      $('.js-duration-countup').html(mUp + ':' + sUp);
+      if (curtime > 0) {
+        $('.js-duration-coundown').html(mDown + ':' + sDown);
+        $('.js-fixed-player-tracker .js-tracker-handle').html(mUp + ':' + sUp + '/' + mDuration + ':' + sDuration);
+        $('.js-tracker-handle').removeClass('d-none');
       }
-
-      $('.js-duration-coundown').html(mDown + ':' + sDown);
-      tracker.slider('value', curtime);
-    });
+      $('.js-tracker').slider('value', curtime);
+    }, false);
 
     song.addEventListener('ended', function () {
       var next = $('.js-playlist li.active').next();
@@ -252,7 +263,7 @@ $.get('assets/json/songs.json', data => {
 
   var playAudio = () => {
     playRequest(song);
-    tracker.slider('option', 'max', song.duration);
+    $('.js-tracker').slider('option', 'max', song.duration);
     $('.js-playlist li').removeClass('playing pause');
     $('.js-track-thumb, .js-playlist li.active').addClass('playing').removeClass('pause');
     $('.js-play').addClass('d-none');

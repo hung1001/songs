@@ -298,7 +298,27 @@ body {
   background: #906231;;
   height: 100%;
   top: 0;
-  transition: all ease-in-out .3s;
+  transition: background ease-in-out .3s;
+}
+
+@media (min-width: 992px) {
+  .fixed-player__control .controls {
+    justify-content: flex-start;
+  }
+
+  .fixed-player__tracker .tracker {
+    width: calc(100% - 60px);
+  }
+
+  .fixed-player__tracker .tracker--handle {
+    border-radius: 15px;
+    font-size: 10px;
+    height: 15px;
+    min-width: 55px;
+    padding: 0 5px;
+    top: -5px;
+    width: auto;
+  }
 }
 
 .duration {
