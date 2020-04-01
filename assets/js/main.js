@@ -1,4 +1,5 @@
-$.get('assets/json/songs.json', data => {
+$.get('https://dl.dropboxusercontent.com/s/13ycxvy1r4yojm1/songs.json', _data => {
+  const data = JSON.parse(_data);
   var song, alarm, init = true,
     randImg = [], randBg = [], curVolume = 100;
 
